@@ -1,0 +1,374 @@
+﻿<!DOCTYPE html>
+<html lang="ru" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preloader Animation</title>
+    <style>
+        /* Основные стили для body */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('./images/bg-01.jpg');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Стили для прелоадера */
+        .preloader {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+        }
+
+        svg {
+            width: 100px;
+            height: 100px;
+        }
+
+        #svg {
+            fill: none;
+            stroke: #333;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 2s infinite ease-in-out;
+        }
+
+        .preloader-text {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* Анимация прелоадера */
+        @keyframes dash {
+            0% {
+                stroke-dashoffset: 200;
+            }
+            50% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: -200;
+            }
+        }
+
+        /* Стили для формы */
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            --input-focus: #666;
+            --font-color: #323232;
+            --font-color-sub: #666;
+            --bg-color: #fff;
+            --bg-color-alt: #666;
+            --main-color: #323232;
+            margin-top: -20px;
+            margin-left: 0px;
+        }
+
+        .card-switch {
+            position: relative;
+        }
+
+        .flip-card__form {
+            display: flex;
+            flex-direction: column;
+            align-items: center
+            
+        }
+
+        .flip-card__input {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .flip-card__btn {
+            padding: 1px;
+            background-color: #666;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            align-self: center
+        }
+
+        /* Стили для переключателя карточек */
+        .switch {
+            transform: translateY(-200px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 50px;
+            height: 20px;
+        }
+
+        .card-side::before,
+        .card-side::after {
+            position: absolute;
+            left: -70px;
+            top: 0;
+            width: 100px;
+            color: var(--font-color);
+            font-weight: 600;
+        }
+
+        .card-side::before {
+            content: 'Log in';
+            text-decoration: underline;
+        }
+
+        .card-side::after {
+            content: 'Sign up';
+            left: 70px;
+            text-decoration: none;
+        }
+
+        .toggle {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            border: 2px solid var(--main-color);
+            border-radius: 5px;
+            left: -2px;
+            bottom: 2px;
+            background-color: var(--bg-color);
+            box-shadow: 0 3px 0 var(--main-color);
+            transition: 0.3s;
+        }
+
+        .toggle:checked+.slider {
+            background-color: var(--input-focus);
+        }
+
+        .toggle:checked+.slider:before {
+            transform: translateX(30px);
+        }
+
+        .toggle:checked~.card-side:before {
+            text-decoration: none;
+        }
+
+        .toggle:checked~.card-side:after {
+            text-decoration: underline;
+        }
+
+        .flip-card__inner {
+            width: 300px;
+            height: 350px;
+            position: relative;
+            background-color: transparent;
+            perspective: 1000px;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .toggle:checked~.flip-card__inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card__front,
+        .flip-card__back {
+            padding: 20px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: lightgrey;
+            gap: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+        }
+
+        .flip-card__back {
+            width: 100%;
+            transform: rotateY(180deg);
+        }
+
+        .title {
+            margin: 20px 0;
+            font-size: 25px;
+            font-weight: 900;
+            text-align: center;
+            color: var(--main-color);
+        }
+
+        .flip-card__input {
+            width: 250px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--font-color);
+            padding: 5px 10px;
+            outline: none;
+        }
+
+        .flip-card__input::placeholder {
+            color: var(--font-color-sub);
+            opacity: 0.8;
+        }
+
+        .flip-card__input:focus {
+            border: 2px solid var(--input-focus);
+        }
+
+        .flip-card__btn:active,
+        .button-confirm:active {
+            box-shadow: 0px 0px var(--main-color);
+            transform: translate(3px, 3px);
+        }
+
+        .flip-card__btn {
+            margin: 20px 0;
+            width: 120px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--font-color);
+            cursor: pointer;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!--================================
+        ПРЕДВАРИТЕЛЬНЫЙ СТАРТ
+      =================================-->
+    <div class="preloader">
+        <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            <path id="svg" d="M0,1005S175,995,500,995s500,5,500,5V0H0Z"></path>
+        </svg>
+        <h5 class="preloader-text">Загрузка</h5>
+    </div>
+    <!--================================
+        ПРЕДВАРИТЕЛЬНЫЙ КОНЕЦ
+      =================================-->
+
+    <!--================================
+        ФОРМА ДЛЯ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
+      =================================-->
+    <div class="wrapper">
+        <div class="card-switch">
+            <label class="switch">
+                <input class="toggle" type="checkbox">
+                <span class="slider"></span>
+                <span class="card-side"></span>
+                <div class="flip-card__inner">
+                    <!-- Форма авторизации -->
+                    <div class="flip-card__front">
+                        <div class="title">Авторизоваться</div>
+                        <form action="" class="flip-card__form">
+                            <input type="email" placeholder="Логин" id="username" name="email" class="flip-card__input">
+                            <input type="password" placeholder="пароль" name="password" class="flip-card__input">
+                            <button class="flip-card__btn login100-form-btn" id="login-btn">Войти</button>
+                        </form>
+                    </div>
+                    <!-- Форма регистрации -->
+                    <div class="flip-card__back">
+                        <div class="title">Регистрация</div>
+                        <form action="" class="flip-card__form">
+                            <input type="name" placeholder="Логин" id="username" class="flip-card__input">
+                            <input type="email" placeholder="Email" name="email" class="flip-card__input">
+                            <input type="password" placeholder="Введите новый пароль" name="password" class="flip-card__input">
+                            <button class="flip-card__btn txt2 hov1">register</button>
+                        </form>
+                    </div>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- Скрипт для обработки событий формы -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to handle redirect with animation
+            function handleRedirect(event, url) {
+                event.preventDefault(); // Предотвращаем действие по умолчанию
+                const username = document.getElementById('username').value;
+                localStorage.setItem('username', username); // Сохраняем имя пользователя в локальном хранилище
+                document.body.classList.add('fade-out'); // Добавляем класс затухания
+                setTimeout(function () {
+                    window.location.href = url; // Перенаправление после анимации
+                }, 500); // Соответствие продолжительности перехода CSS
+            }
+
+            // Перенаправление для кнопки входа в систему
+            const loginButton = document.querySelector('.login100-form-btn');
+            loginButton.addEventListener('click', function (event) {
+                handleRedirect(event, 'index_2.html');
+            });
+
+            // Перенаправление для ссылки на регистрацию
+            const registerLink = document.querySelector('.txt2.hov1');
+            registerLink.addEventListener('click', function (event) {
+                handleRedirect(event, 'index.html');
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
